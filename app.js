@@ -9,10 +9,12 @@ var session = require('client-sessions');
 //Database setup
 var mongo = require('mongodb');
 var monk = require('monk');
-const db = monk('localhost:2701/KTH-Study-App-DB');
+const db = monk('localhost:27017/KTH-Study-App-DB');
 
+//route objects
 var index = require('./routes/index');
 var users = require('./routes/users');
+var login = require('./routes/login');
 
 var app = express();
 
@@ -28,6 +30,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(session({
+  cookieName: 'session',
+  secret: 'private-key',
+  duration: 30 * 60 * 1000,
+  activeDuration: 5 * 60 * 1000
+}));
+
 //assign db object to the incoming http request
 app.use(function(req, res, next) {
   req.db = db;
@@ -36,6 +45,7 @@ app.use(function(req, res, next) {
 
 app.use('/', index);
 app.use('/users', users);
+app.use('/login', login);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
