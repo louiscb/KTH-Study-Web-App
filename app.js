@@ -13,8 +13,8 @@ const db = monk('localhost:27017/KTH-Study-App-DB');
 
 //route objects
 var index = require('./routes/index');
-var users = require('./routes/users');
 var login = require('./routes/login');
+var groups = require('./routes/groups');
 
 var app = express();
 
@@ -39,13 +39,23 @@ app.use(session({
 
 //assign db object to the incoming http request
 app.use(function(req, res, next) {
+  //console.log(req);
   req.db = db;
   next();
 });
 
-app.use('/', index);
-app.use('/users', users);
 app.use('/login', login);
+//index has to go last as we need to load the login page into the app first
+app.use('/groups', groups);
+app.use('/', requireLogin, index);
+
+function requireLogin (req, res, next) {
+  if(!req.session.user) {
+    res.redirect('/login');
+  } else {
+    next();
+  }
+}
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

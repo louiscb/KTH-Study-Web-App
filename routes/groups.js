@@ -6,4 +6,13 @@ router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
 
+router.get('/list', function(req, res, next) {
+  var db = req.db;
+  var collection = db.get('studyGroups');
+
+  collection.find({}, {}, function(e, docs){
+    res.json(docs);
+  })
+});
+
 module.exports = router;

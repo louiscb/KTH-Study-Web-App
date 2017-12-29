@@ -6,3 +6,7 @@ body {
 a {
   color: #00B7FF;
 }
+
+#single-group {
+  background-color: cyan;
+}

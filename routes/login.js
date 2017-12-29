@@ -17,7 +17,9 @@ router.post('/', function(req, res, next) {
         res.send({ msg: 'Wrong credentials'});
       } else {
         if (enteredPassword === user.password) {
+          req.session.user = user;
           res.send({ msg: 'success'});
+          console.log(user);
         } else {
           res.send({ msg: 'Wrong credentials'});
         }
