@@ -2,6 +2,10 @@ $(document).ready(function () {
   $('#btnLoginUser').on('click', loginForm);
 });
 
+function printLoginError(msg) {
+  $('#errorMsg h2').html(msg);
+}
+
 function loginForm() {
   event.preventDefault();
 
@@ -15,5 +19,11 @@ function loginForm() {
     data: loginUser,
     url: '/login',
     dataType: 'JSON'
+  }).done(function(response) {
+      if (response.msg === 'success') {
+        window.location = '/';
+      } else {
+        printLoginError(response.msg);
+      }
   });
 }

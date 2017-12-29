@@ -14,12 +14,12 @@ router.post('/', function(req, res, next) {
 
   collection.findOne({'email':enteredEmail}, function(e, user) {
       if (user == null) {
-        res.send('Wrong credentials');
+        res.send({ msg: 'Wrong credentials'});
       } else {
         if (enteredPassword === user.password) {
-          res.send('Correct');
+          res.send({ msg: 'success'});
         } else {
-          res.send('Wrong Password');
+          res.send({ msg: 'Wrong credentials'});
         }
       }
   });
