@@ -14,8 +14,10 @@ function listGroups() {
       groups += '<p> Number of members:' + this.numOfParticipants + '</p>';
       groups += '<p> Created:' + this.timeStamp + '</p>';
       groups += '<p> Description:' + this.description + '</p>';
+      groups += '<p> <a href="/groups/list/' + this._id + '"> Click </a></p>';
       groups += '</div>';
     });
+    
     $('#groups').html(groups);
   });
 }
