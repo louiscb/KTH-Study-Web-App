@@ -35,11 +35,9 @@ router.post('/create', function(req, res, next) {
   req.body.owner = req.session.user.email;
   var d = new Date();
   req.body.timeStamp = d.toDateString();
-  req.body.numOfParticipants = 1;
   req.body.members = [req.body.owner];
 
   collection.insert(req.body, function(err, result) {
-    console.log(result);
     res.send(
       (err === null) ? { msg: 'success', link: result._id } : { msg: err }
     );

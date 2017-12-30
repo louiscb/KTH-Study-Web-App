@@ -3,6 +3,8 @@ $(document).ready(function () {
   $('#btnCreateGroup').on('click', createGroup);
   $('#btnDeleteGroup').on('click', deleteGroup);
   $('#btnJoinGroup').on('click', joinGroup);
+  $('#btnCreateUser').on('click', createUser);
+  $('#btnSignOut').on('click', signOut);
   listGroups();
 });
 
@@ -14,7 +16,7 @@ function listGroups() {
       groups += '<div id="single-group">';
       groups += '<p> Subject: ' + this.subject + '</p>';
       groups += '<p> Group Owner: ' + this.owner + '</p>';
-      groups += '<p> Number of members:' + this.numOfParticipants + '</p>';
+      groups += '<p> Number of members:' + this.members.length + '</p>';
       groups += '<p> Created:' + this.timeStamp + '</p>';
       groups += '<p> location:' + this.location + '</p>';
       groups += '<p> Description:' + this.description + '</p>';
@@ -107,4 +109,41 @@ function joinGroup() {
         window.alert('You are already a member of this group');
       }
   })
+}
+
+function createUser() {
+  event.preventDefault();
+
+  var newUser = {
+    'email' : $('#createUser fieldset input#inputNewEmail').val(),
+    'password' : $('#createUser fieldset input#inputNewPassword').val()
+  };
+
+  $.ajax({
+    type: 'POST',
+    data: newUser,
+    url: '/users/create',
+    dataType: 'JSON'
+  }).done(function(response) {
+      if (response.msg === 'success') {
+        window.location = '/login';
+      } else {
+        printLoginError(response.msg);
+      }
+  });
+}
+
+function signOut() {
+  event.preventDefault();
+
+  $.ajax({
+    type: 'POST',
+    url: '/users/signout'
+  }).done(function(response) {
+      if (response.msg === 'success') {
+        window.location = '/login';
+      } else {
+        printLoginError(response.msg);
+      }
+  });
 }

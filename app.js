@@ -15,6 +15,7 @@ const db = monk('localhost:27017/KTH-Study-App-DB');
 var index = require('./routes/index');
 var login = require('./routes/login');
 var groups = require('./routes/groups');
+var users = require('./routes/users');
 
 var app = express();
 
@@ -45,9 +46,10 @@ app.use(function(req, res, next) {
 });
 
 app.use('/login', login);
+app.use('/users', users);
 //index has to go last as we need to load the login page into the app first
-app.use('/groups', groups);
-app.use('/', index);
+app.use('/groups', requireLogin, groups);
+app.use('/', requireLogin, index);
 //app.use('/', requireLogin, index);
 
 
