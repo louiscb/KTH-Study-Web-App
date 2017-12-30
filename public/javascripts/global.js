@@ -2,6 +2,7 @@ $(document).ready(function () {
   $('#btnLoginUser').on('click', loginForm);
   $('#btnCreateGroup').on('click', createGroup);
   $('#btnDeleteGroup').on('click', deleteGroup);
+  $('#btnJoinGroup').on('click', joinGroup);
   listGroups();
 });
 
@@ -87,6 +88,23 @@ function deleteGroup() {
         window.location = '/';
       } else {
         window.alert('You do not have the permissions to delete this group');
+      }
+  })
+}
+
+function joinGroup() {
+  event.preventDefault();
+  var groupId = location.href.substr(location.href.lastIndexOf('/') + 1);
+
+  $.ajax({
+    type: 'POST',
+    url: '/groups/join/' + groupId
+  }).done(function(response) {
+      if (response.msg === 'success') {
+        window.alert('Joined Group');
+        window.location = location.href;
+      } else {
+        window.alert('You are already a member of this group');
       }
   })
 }

@@ -46,8 +46,10 @@ app.use(function(req, res, next) {
 
 app.use('/login', login);
 //index has to go last as we need to load the login page into the app first
-app.use('/groups', requireLogin, groups);
-app.use('/', requireLogin, index);
+app.use('/groups', groups);
+app.use('/', index);
+//app.use('/', requireLogin, index);
+
 
 function requireLogin (req, res, next) {
   if(!req.session.user) {

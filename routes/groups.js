@@ -36,6 +36,7 @@ router.post('/create', function(req, res, next) {
   var d = new Date();
   req.body.timeStamp = d.toDateString();
   req.body.numOfParticipants = 1;
+  req.body.members = [req.body.owner];
 
   collection.insert(req.body, function(err, result) {
     console.log(result);
@@ -45,9 +46,28 @@ router.post('/create', function(req, res, next) {
   });
 });
 
-//update group
-router.post('/:id', function(req, res, next) {
-  res.send();
+//join group
+router.post('/join/:id', function(req, res, next) {
+  var db = req.db;
+  var collection = db.get('studyGroups');
+  var id = req.params.id;
+  var isMember = false;
+
+  collection.findOne({_id :id }, function(e, group) {
+      for (i in group.members) {
+        if (group.members[i] === req.session.user.email) {
+          isMember = true;
+          break;
+        }
+      }
+      if (!isMember) {
+        collection.update({_id :id }, { $push : {"members" : req.session.user.email }}, function(e, group) {
+          res.send({msg: 'success'});
+        });
+      } else {
+        res.send({msg: 'You are already a member'});
+      }
+  });
 });
 
 router.delete('/delete/:id', function(req, res, next) {
