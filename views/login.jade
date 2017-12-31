@@ -1,16 +1,21 @@
 extends layout
 
 block content
-  h2 Login
+  #content
+    h2 Login
 
-  #loginForm
-    fieldset
-      input#inputUserEmail(type='text', placeholder='Email')
-      input#inputUserPassword(type='text', placeholder='Password')
-      br
-      button#btnLoginUser Login
-      
-  a(href="/users/create") Create a new account
-  
-  #errorMsg
-    h2
+    #loginForm
+      fieldset
+        input#inputUserEmail(type='text', placeholder='Email')
+        br
+        input#inputUserPassword(type='text', placeholder='Password')
+        br
+        br
+        button#btnLoginUser Login
+    
+    br
+    form(action="/users/create")
+      button(type="submit") Create a new account   
+          
+    #errorMsg
+      h2

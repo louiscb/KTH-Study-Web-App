@@ -1,15 +1,18 @@
 extends layout
 
 block content
-  h2 Create New Study Group
-  
-  #createGroup
-    fieldset
-      input#inputSubject(type='text', placeholder='Subject')
-      br
-      input#inputLocation(type='text', placeholder='location')
-      br
-      input#inputDescription(type='text', placeholder='Description')
-      br
-      br
-      button#btnCreateGroup Create Group
+  #content
+    h2 Create New Study Group
+    
+    #createGroup
+      fieldset
+        input#inputSubject(type='text', placeholder='Subject')
+        br
+        br
+        input#inputLocation(type='text', placeholder='Location')
+        br
+        br
+        textarea#inputDescription(type='text', placeholder='Description' cols='100' rows='5')
+        br
+        br
+        button#btnCreateGroup Create Group

@@ -18,13 +18,13 @@ function listGroups() {
   $.getJSON('/groups/list', function (data) {
     $.each(data, function() {
       groups += '<div id="single-group">';
-      groups += '<p> Subject: ' + this.subject + '</p>';
-      groups += '<p> Group Owner: ' + this.owner + '</p>';
-      groups += '<p> Number of members:' + this.members.length + '</p>';
-      groups += '<p> Created:' + this.timeStamp + '</p>';
-      groups += '<p> location:' + this.location + '</p>';
-      groups += '<p> Description:' + this.description + '</p>';
-      groups += '<p> <a href="/groups/list/' + this._id + '"> Click </a></p>';
+      groups += '<a href="/groups/list/' + this._id + '" class="group-link">';
+      groups += '<p> <b>Subject:</b> ' + this.subject + '</p>';
+      groups += '<p> <b>Group Owner:</b> ' + this.owner + '</p>';
+      groups += '<p> <b>Number of members:</b> ' + this.members.length + '</p>';
+      groups += '<p> <b>Created:</b> ' + this.timeStamp + '</p>';
+      groups += '<p> <b>Location:</b> ' + this.location + '</p>';
+      groups += '</a>';
       groups += '</div>';
     });
 
@@ -65,7 +65,7 @@ function createGroup() {
   var newGroup = {
     'subject' : $('#createGroup fieldset input#inputSubject').val(),
     'location' : $('#createGroup fieldset input#inputLocation').val(),
-    'description' : $('#createGroup fieldset input#inputDescription').val()
+    'description' : $('#createGroup fieldset textarea#inputDescription').val()
   };
 
   $.ajax({
@@ -133,7 +133,7 @@ function createUser() {
       if (response.msg === 'success') {
         window.location = '/login';
       } else {
-        printLoginError(response.msg);
+        window.alert(response.msg);
       }
   });
 }
@@ -156,7 +156,7 @@ function signOut() {
 function comment() {
   event.preventDefault();
   var groupId = location.href.substr(location.href.lastIndexOf('/') + 1);
-  var msg = $('#commentForm fieldset input#inputComment').val();
+  var msg = $('#commentForm form textarea#inputComment').val();
   var comment = {
     'msg' : msg
   };
