@@ -5,7 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('client-sessions');
-
+let config = require('config');
 //Database setup
 var mongo = require('mongodb');
 var monk = require('monk');
@@ -48,10 +48,18 @@ app.use(function(req, res, next) {
 app.use('/login', login);
 app.use('/users', users);
 //index has to go last as we need to load the login page into the app first
-app.use('/groups',requireLogin, groups);
-app.use('/',requireLogin, index);
-//app.use('/', requireLogin, index);
 
+if(config.util.getEnv('NODE_ENV') !== 'test') {
+  app.use('/groups',requireLogin, groups);
+  app.use('/',requireLogin, index);
+} else {
+  app.use('/groups',makeCookieTest, groups);
+  app.use('/', makeCookieTest, index);
+  function makeCookieTest(req, res, next) {
+    req.session.user = { 'email' : 'test' };
+    next();
+  }
+}
 
 function requireLogin (req, res, next) {
   if(!req.session.user) {
