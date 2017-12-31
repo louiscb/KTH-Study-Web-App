@@ -5,8 +5,12 @@ $(document).ready(function () {
   $('#btnJoinGroup').on('click', joinGroup);
   $('#btnCreateUser').on('click', createUser);
   $('#btnSignOut').on('click', signOut);
+  $('#btnSendComment').on('click', comment);
   listGroups();
 });
+
+var userEmail = '';
+console.log(userEmail);
 
 function listGroups() {
   var groups = '';
@@ -47,6 +51,7 @@ function loginForm() {
     dataType: 'JSON'
   }).done(function(response) {
       if (response.msg === 'success') {
+        userEmail = loginUser;
         window.location = '/';
       } else {
         printLoginError(response.msg);
@@ -146,4 +151,26 @@ function signOut() {
         printLoginError(response.msg);
       }
   });
+}
+
+function comment() {
+  event.preventDefault();
+  var groupId = location.href.substr(location.href.lastIndexOf('/') + 1);
+  var msg = $('#commentForm fieldset input#inputComment').val();
+  var comment = {
+    'msg' : msg
+  };
+
+  $.ajax({
+    type: 'POST',
+    data: comment,
+    url: '/groups/comment/' + groupId
+  }).done(function(response) {
+      if (response.msg === 'success') {
+        window.alert('Sent Comment');
+        window.location = location.href;
+      } else {
+        window.alert(response.msg);
+      }
+  })
 }

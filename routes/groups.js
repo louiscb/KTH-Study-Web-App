@@ -36,6 +36,7 @@ router.post('/create', function(req, res, next) {
   var d = new Date();
   req.body.timeStamp = d.toDateString();
   req.body.members = [req.body.owner];
+  req.body.comments = [];
 
   collection.insert(req.body, function(err, result) {
     res.send(
@@ -81,6 +82,40 @@ router.delete('/delete/:id', function(req, res, next) {
       });
     } else {
       res.send ({ msg: 'Not Owner'});
+    }
+  });
+});
+
+router.post('/comment/:id', function(req, res, next) {
+  var db = req.db;
+  var collection = db.get('studyGroups');
+  var id = req.params.id;
+  var isMember = false;
+
+  var comment = {
+    'name' : req.session.user.email,
+    'msg': req.body.msg
+  };
+
+  collection.findOne({_id :id }, function(e, group) {
+    for (i in group.members) {
+      console.log(group.members);
+      if (group.members[i] === req.session.user.email) {
+        console.log(group.members[i]);
+        console.log(req.session.user.email);
+        isMember = true;
+        break;
+      }
+    }
+
+    if (isMember) {
+      collection.update({_id :id }, { $push : {"comments" : comment }}, function(err, group) {
+        res.send(
+          (err == null) ? { msg: 'success'} : { msg: err }
+        );
+      });
+    } else {
+        res.send({msg: 'You need to be a member of this group to comment'});
     }
   });
 });

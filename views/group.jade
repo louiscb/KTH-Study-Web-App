@@ -12,5 +12,16 @@ block content
   button#btnJoinGroup Join Group
   br
   button#btnDeleteGroup Delete
- 
   
+  h3 Comments
+
+  #commentForm
+    fieldset
+      input#inputComment(type='text', placeholder='comment')
+      br
+      button#btnSendComment Send
+
+  #comments
+    each value, index in comments
+      #comment
+        p= value.name + ': ' + value.msg
