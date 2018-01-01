@@ -108,8 +108,9 @@ function joinGroup() {
     url: '/groups/join/' + groupId
   }).done(function(response) {
       if (response.msg === 'success') {
+        console.log('asdf');
         window.alert('Joined Group');
-        window.location = location.href;
+        window.location = '/groups/list/' + groupId;
       } else {
         window.alert('You are already a member of this group');
       }

@@ -55,8 +55,8 @@ router.post('/join/:id', function(req, res, next) {
         }
       }
       if (!isMember) {
-        collection.update({_id :id }, { $push : {"members" : req.session.user.email }}, function(e, group) {
-          (err == null) ? { msg: 'success'} : { msg: err }
+        collection.update({_id :id }, { $push : {"members" : req.session.user.email }}, function(err, group) {
+          res.send((err == null) ? { msg: 'success'} : { msg: err });
         });
       } else {
         res.send({msg: 'You are already a member'});
