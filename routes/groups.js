@@ -1,10 +1,14 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET users listing. */
-// router.get('/', function(req, res, next) {
-//   res.send('respond with a resource');
-// });
+router.get('/list', function(req, res, next) {
+  var db = req.db;
+  var collection = db.get('studyGroups');
+
+  collection.find({}, {}, function(e, docs){
+    res.json(docs);
+  })
+});
 
 router.get('/list/:id', function(req, res, next) {
   var db = req.db;
@@ -14,15 +18,6 @@ router.get('/list/:id', function(req, res, next) {
   collection.findOne({'_id':id}, function(e, group) {
     res.render('group', group);
   });
-});
-
-router.get('/list', function(req, res, next) {
-  var db = req.db;
-  var collection = db.get('studyGroups');
-
-  collection.find({}, {}, function(e, docs){
-    res.json(docs);
-  })
 });
 
 router.get('/create', function(req, res, next) {
@@ -61,28 +56,11 @@ router.post('/join/:id', function(req, res, next) {
       }
       if (!isMember) {
         collection.update({_id :id }, { $push : {"members" : req.session.user.email }}, function(e, group) {
-          res.send({msg: 'success'});
+          (err == null) ? { msg: 'success'} : { msg: err }
         });
       } else {
         res.send({msg: 'You are already a member'});
       }
-  });
-});
-
-router.delete('/delete/:id', function(req, res, next) {
-  var db = req.db;
-  var collection = db.get('studyGroups');
-  var idToDelete = req.params.id;
-
-  collection.findOne({_id :idToDelete }, function(e, group) {
-    if (group.owner === req.session.user.email) {
-      collection.remove({_id : idToDelete }, function (err, result){
-        res.send(
-          (err == null) ? { msg: 'success'} : { msg: err });
-      });
-    } else {
-      res.send ({ msg: 'Not Owner'});
-    }
   });
 });
 
@@ -99,10 +77,7 @@ router.post('/comment/:id', function(req, res, next) {
 
   collection.findOne({_id :id }, function(e, group) {
     for (i in group.members) {
-      console.log(group.members);
       if (group.members[i] === req.session.user.email) {
-        console.log(group.members[i]);
-        console.log(req.session.user.email);
         isMember = true;
         break;
       }
@@ -116,6 +91,23 @@ router.post('/comment/:id', function(req, res, next) {
       });
     } else {
         res.send({msg: 'You need to be a member of this group to comment'});
+    }
+  });
+});
+
+router.delete('/delete/:id', function(req, res, next) {
+  var db = req.db;
+  var collection = db.get('studyGroups');
+  var idToDelete = req.params.id;
+
+  collection.findOne({_id :idToDelete }, function(e, group) {
+    if (group.owner === req.session.user.email) {
+      collection.remove({_id : idToDelete }, function (err, result){
+        res.send(
+          (err == null) ? { msg: 'success'} : { msg: err });
+      });
+    } else {
+      res.send ({ msg: 'Not Owner'});
     }
   });
 });

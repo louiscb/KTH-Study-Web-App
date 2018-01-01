@@ -46,13 +46,14 @@ app.use(function(req, res, next) {
 });
 
 app.use('/login', login);
-app.use('/users', users);
 //index has to go last as we need to load the login page into the app first
 
 if(config.util.getEnv('NODE_ENV') !== 'test') {
+  app.use('/users', users);
   app.use('/groups',requireLogin, groups);
   app.use('/',requireLogin, index);
 } else {
+  app.use('/users', makeCookieTest, users);
   app.use('/groups',makeCookieTest, groups);
   app.use('/', makeCookieTest, index);
   function makeCookieTest(req, res, next) {
