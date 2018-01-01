@@ -14,8 +14,8 @@ Run `npm install` to get the appropriate node modules.
 
 Start your MongoDB server with `mongod`. Make sure it's listening on the default port.
 
-For the normal environment run `npm start`.
+For the normal environment run `npm start`
 
-For the test environment run `npm test`.
+For the test environment run `npm test`
 
-Navigate to `localhost:3000`.
+Navigate to `localhost:3000`
